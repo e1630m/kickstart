@@ -1,8 +1,8 @@
 from contextlib import redirect_stdout
+from io import StringIO
 from time import perf_counter_ns
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
-import io
 import os
 from ra1 import *
 
@@ -15,26 +15,25 @@ class Tester(TestCase):
         o = [p + f for f in os.listdir('data') if n in f and 'out' in f]
         for ts_no in range(len(i)):
             with open(i[ts_no], 'r') as f:
-                ti = [line.strip('\n') for line in f.readlines()]
+                inputs = [line.strip('\n') for line in f.readlines()]
             with open(o[ts_no], 'r') as f:
-                to = [line.strip('\n') for line in f.readlines()]
+                outputs = [line.strip('\n') for line in f.readlines()]
             m = MagicMock()
-            f = io.StringIO()
-            m.side_effect = ti
-            length = len(ti)
+            f = StringIO()
+            length = len(inputs)
             with redirect_stdout(f):
-                with patch('builtins.input', side_effect=ti):
+                with patch('builtins.input', side_effect=inputs):
                     reader()
                     start = perf_counter_ns()
                     for _ in range(length):
                         m()
             end = perf_counter_ns()
             result = f.getvalue().split('\n')[:-1]
-            if opt == 'verbose':
-                for case, (actual, expected) in enumerate(zip(result, to)):
-                    self.assertEqual(actual, expected)
-                    print(f'Test Set {ts_no + 1}: Test {case + 1} Passed')
-            print(f'Test Set {ts_no + 1}: {len(to)} tests passed '
+            for case_no, (actual, expected) in enumerate(zip(result, outputs)):
+                self.assertEqual(actual, expected)
+                if opt == 'verbose':
+                    print(f'Test Set {ts_no + 1}: Test {case_no + 1} Passed')
+            print(f'Test Set {ts_no + 1}: {len(outputs)} tests passed '
                   f'in {end - start:,}ns')
 
 
