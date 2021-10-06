@@ -1,6 +1,9 @@
+from contextlib import redirect_stdout
 from time import perf_counter_ns
 from unittest import TestCase
+from unittest.mock import MagicMock, patch
 from ra1 import *
+import io
 import os
 
 
@@ -13,13 +16,13 @@ class Tester(TestCase):
         data = []
         for ts_no in range(len(i)):
             with open(i[ts_no], 'r') as f:
-                ti = f.readlines()
+                ti = [line.strip('\n') for line in f.readlines()]
             with open(o[ts_no], 'r') as f:
-                to = f.readlines()
-            tmp = {i + 1: {'N': int(ti[i * 2].strip('\n').split()[0]),
-                           'K': int(ti[i * 2].strip('\n').split()[1]),
-                           'S': ti[i * 2 + 1].strip('\n'),
-                           'expected': to[i].strip('\n')}
+                to = [line.strip('\n') for line in f.readlines()]
+            tmp = {i + 1: {'N': int(ti[i * 2].split()[0]),
+                           'K': int(ti[i * 2].split()[1]),
+                           'S': ti[i * 2 + 1],
+                           'expected': to[i]}
                    for i in range(int(ti.pop(0)))}
             data.append(tmp)
         self.data = data
