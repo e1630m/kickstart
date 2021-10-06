@@ -21,20 +21,20 @@ class Tester(TestCase):
             m = MagicMock()
             f = StringIO()
             length = len(inputs)
+            start = perf_counter_ns()
             with redirect_stdout(f):
                 with patch('builtins.input', side_effect=inputs):
                     reader()
-                    start = perf_counter_ns()
                     for _ in range(length):
                         m()
-            end = perf_counter_ns()
             result = f.getvalue().split('\n')[:-1]
             for case_no, (actual, expected) in enumerate(zip(result, outputs)):
                 self.assertEqual(actual, expected)
                 if opt == 'verbose':
                     print(f'Test Set {ts_no + 1}: Test {case_no + 1} Passed')
+            end = perf_counter_ns()
             print(f'Test Set {ts_no + 1}: {len(outputs)} tests passed '
-                  f'in {end - start:,}ns')
+                  f'in {(end - start) // int(1e6):,}ms')
 
 
 if __name__ == '__main__':
