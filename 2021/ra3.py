@@ -1,37 +1,40 @@
-def naive(m, h, w):
-    heights, highest, boxes = {}, 0, 0
+def update(m, h, w, fr):
+    updated = []
+    for r in range(h):
+        line, limit = [], 0
+        for c in range(w):
+            c = -1 - c if fr in 'rd' else c
+            limit = max(limit, m[r][c]) if fr in 'lr' else max(limit, m[c][r])
+            line.append(limit)
+            limit -= 1
+        if fr in 'rd':
+            line.reverse()
+        updated.append(line)
+    return updated
+
+
+def four_ways(m, h, w):
+    left, right = update(m, h, w, 'l'), update(m, h, w, 'r')
+    up, down = update(m, w, h, 'u'), update(m, w, h, 'd')
+    return [[max(left[r][c], right[r][c], up[c][r], down[c][r])
+             for c in range(w)] for r in range(h)]
+
+
+def counter(m, h, w):
+    copy = four_ways([[i for i in line] for line in m], h, w)
+    copy = four_ways(copy, h, w)
+    boxes = 0
     for r in range(h):
         for c in range(w):
-            highest = max(highest, m[r][c])
-            heights[m[r][c]] = heights.get(m[r][c], []) + [(r, c)]
-    queue = sorted(list(heights.keys()))[::-1]
-    while queue:
-        height = queue.pop(0)
-        new_heights = []
-        while heights[height]:
-            r, c = heights[height].pop(0)
-            nh = height - 1
-            for dr, dc in ((0, 1), (0, -1), (1, 0), (-1, 0)):
-                nr, nc = r + dr, c + dc
-                if not (0 <= nr < h and 0 <= nc < w and m[nr][nc] < nh):
-                    continue
-                heights[m[nr][nc]].remove((nr, nc))
-                boxes += nh - m[nr][nc]
-                m[nr][nc] = nh
-                heights[nh] = heights.get(nh, []) + [(nr, nc)]
-                if len(heights[nh]) == 1:
-                    new_heights.append(nh)
-        if new_heights:
-            queue += new_heights
-            queue.sort(reverse=True)
+            boxes += copy[r][c] - m[r][c]
     return boxes
 
 
 def reader():
     for case_no in range(int(input())):
         r, c = map(int, input().strip('\n').split())
-        grid = [[int(n) for n in input().strip('\n').split()] for _ in range(r)]
-        print(f'Case #{case_no + 1}: {naive(grid, r, c)}')
+        g = [[int(n) for n in input().strip('\n').split()] for _ in range(r)]
+        print(f'Case #{case_no + 1}: {counter(g, r, c)}')
 
 
 if __name__ == '__main__':
