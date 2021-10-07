@@ -1,7 +1,7 @@
 # Table of Contents
 | Year | Round |  #  | Problem | Solution | Result |
 | :--: | :---: | :-: | :-----: | :------: | :----: |
-| [2020](https://codingcompetitions.withgoogle.com/kickstart/archive/2020) |   [A](https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ffc7)   |  [1](https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ffc7/00000000001d3f56)  | [Allocation (5pts, 7pts)](#allocation-5pts-7pts)                               | [py](./ra1.py)                                                                  |   ✔️   \|   ✔️                                                                                     |
+| [2020](https://codingcompetitions.withgoogle.com/kickstart/archive/2020) |   [A](https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ffc7)   |   [1](https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ffc7/00000000001d3f56)   | [Allocation (5pts, 7pts)](#allocation-5pts-7pts)                         | [py](./ra1.py)                                                                      |   ✔️   \|   ✔️                                                                                       |
 
 # Round A
 ## Allocation (5pts, 7pts)
